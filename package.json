@@ -1,0 +1,15 @@
+{
+  "name": "native-offline-h5",
+  "version": "0.0.0",
+  "description": "Native app load offline h5 resources by small package.",
+  "homepage": "https://github.com/afeiship/native-offline-h5",
+  "author": {
+    "name": "afei",
+    "email": "1290657123@qq.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-load-plugins": "^1.2.0"
+  }
+}
