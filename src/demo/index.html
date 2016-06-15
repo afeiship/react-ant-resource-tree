@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<script type="text/javascript" src="../../bower_components/vue/dist/vue.min.js"></script>
+<script type="text/javascript" src="../../bower_components/zepto/zepto.min.js"></script>
+<script type="text/javascript">
+  $.ajax({
+    type: 'GET',
+    url: './consumer-api/v1/store/7/qrcode_pay/daily_income.action',
+    data: {
+      offset: 0,
+      size: 10
+    },
+    headers: {
+      zjtoken: 'token test`test`1'
+    }
+  });
+</script>
+</body>
+</html>

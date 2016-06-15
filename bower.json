@@ -20,5 +20,9 @@
     "test",
     "tests",
     "src"
-  ]
+  ],
+  "dependencies": {
+    "vue": "^1.0.24",
+    "zepto": "^1.1.6"
+  }
 }
