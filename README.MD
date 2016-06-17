@@ -1,7 +1,6 @@
 #native-offline-h5
 Native app load offline h5 resources by small package.
 
-
 ##proxy_pass:
 + http://www.nowamagic.net/academy/detail/1226280
 
@@ -27,3 +26,6 @@ Native app load offline h5 resources by small package.
   - gulp publish
   - your dist package file: dist-module-packages/<%= module_dir %>.tar.gz
 
+##issues:
+* [ ] Bower merge to one package
+* [ ] All modules need to modules directory

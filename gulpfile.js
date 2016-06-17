@@ -28,6 +28,7 @@
   });
 
   //if bower_components has new ,you need update this package:
+  //gulp tgz-bower
   gulp.task('tgz-bower', function () {
     return gulp.src('bower_components/**')
       .pipe($.tar('bower_components.tar'
@@ -37,6 +38,7 @@
   });
 
   //if common has new ,you need update this package:
+  //gulp tgz-common
   gulp.task('tgz-common', function () {
     return gulp.src('common/dist/**')
       .pipe($.tar('common.tar'
