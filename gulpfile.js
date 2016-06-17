@@ -26,6 +26,21 @@
       .pipe(gulp.dest('.tmp/dist'));
   });
 
+  //if common has new ,you need update this package:
+  gulp.task('tgz-common', function () {
+    var date = new Date();
+    var dateFormat = [
+      [date.getFullYear(), date.getMonth() + 1, date.getDate()].join(''),
+      [date.getHours(), date.getMinutes(), date.getSeconds()].join('')
+    ].join('');
+    return gulp.src('common/dist/**')
+      .pipe($.tar('common-' + dateFormat + '.tar'
+      ))
+      .pipe($.gzip())
+      .pipe(gulp.dest('dist-module-packages'));
+  });
+
+
   //test: gulp tgz --module=pay-select
   gulp.task('tgz', [
     'copy-html',
@@ -37,6 +52,7 @@
       .pipe($.gzip())
       .pipe(gulp.dest('dist-module-packages'));
   });
+
 
 
 }());
