@@ -25,6 +25,7 @@
     "vue": "^1.0.24",
     "zepto": "^1.1.6",
     "webkit-scss-material": "afeiship/webkit-css-material",
-    "Ionicons": "ionicons#^2.0.1"
+    "Ionicons": "ionicons#^2.0.1",
+    "fastclick": "ftlabs/fastclick#^1.0.6"
   }
 }
