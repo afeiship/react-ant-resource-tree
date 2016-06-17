@@ -3,6 +3,7 @@
   var gulp = require('gulp');
   var argv = require('yargs').argv;
   var module_name = argv.module;
+  var dateStr = (new Date()).toISOString().slice(0, 10);
   var $ = require('gulp-load-plugins')({
     pattern: ['gulp-*', 'gulp.*', 'del']
   });
@@ -26,11 +27,18 @@
       .pipe(gulp.dest('.tmp/dist'));
   });
 
+  gulp.task('tgz-bower', function () {
+    return gulp.src('bower_components/**')
+      .pipe($.tar('bower_components.tar'
+      ))
+      .pipe($.gzip())
+      .pipe(gulp.dest('dist-module-packages'));
+  });
+
   //if common has new ,you need update this package:
   gulp.task('tgz-common', function () {
-    var dateStr = (new Date()).toISOString().slice(0, 10);
     return gulp.src('common/dist/**')
-      .pipe($.tar('common-' + dateStr + '.tar'
+      .pipe($.tar('common.tar'
       ))
       .pipe($.gzip())
       .pipe(gulp.dest('dist-module-packages'));
