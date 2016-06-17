@@ -1,0 +1,6 @@
+/**function Start**/
+@function toRem($inValue){
+  $remValue:$inValue/50;
+  @return #{$remValue}rem;
+}
+/**function  End**/

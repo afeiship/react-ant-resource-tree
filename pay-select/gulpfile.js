@@ -2,6 +2,7 @@
 
   'use strict';
   var gulp = require('gulp');
+  var exec = require('child_process').exec;
   var $ = require('gulp-load-plugins')({
     pattern: ['gulp-*', 'gulp.*', 'del', 'imagemin-pngquant'],
     rename: {
@@ -31,8 +32,7 @@
 
 
   gulp.task('scripts', function () {
-    return gulp.src('src/scripts/*.js')
-      .pipe($.concat('common.js'))
+    return gulp.src('src/scripts/*')
       .pipe(gulp.dest('dist/scripts'))
       .pipe($.uglify())
       .pipe($.rename({
@@ -49,8 +49,7 @@
 
   gulp.task('styles', function () {
     return gulp
-      .src('src/sass/style.scss')
-      .pipe($.concat('common.css'))
+      .src('src/sass/*.scss')
       .pipe($.sourcemaps.init())
       .pipe($.sass(sassOptions).on('error', $.sass.logError))
       .pipe($.sourcemaps.write())
@@ -76,8 +75,18 @@
     gulp.start([
       'images',
       'scripts',
-      'styles'
+      'styles',
+      'images-watch',
+      'scripts-watch',
+      'styles-watch'
     ]);
+  });
+
+
+  gulp.task('publish', function () {
+    exec('cd .. && gulp tgz --module=pay-select', function () {
+      console.info('[Success! Package path]:->', 'dist-module-packages/pay-select.tar.gz');
+    });
   });
 
 }());
