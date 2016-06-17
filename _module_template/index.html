@@ -5,15 +5,15 @@
   <title>Title</title>
 </head>
 <body>
-
+<div id="container"></div>
 <script type="text/javascript" src="../../bower_components/vue/dist/vue.min.js"></script>
 <script type="text/javascript" src="../../bower_components/zepto/zepto.min.js"></script>
 <script type="text/javascript">
   //http://api.zaijiadd.com/v1/_sup/store/{store_id}/store_info.action
-
   $.ajax({
     type: 'GET',
     url: '../consumer-api/v1/banner/list.action',
+    dataType: 'json',
     data: {
       offset: 0,
       size: 10,
@@ -22,9 +22,8 @@
     headers: {
       zjtoken: 'test`test`7'
     },
-    success: function (inResp) {
-      debugger;
-      console.log(inResp);
+    success: function (response) {
+      console.log(response);
     }
   });
 </script>
