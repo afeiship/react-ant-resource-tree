@@ -10,8 +10,11 @@
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-debug": "^2.1.2",
+    "gulp-filter": "^4.0.0",
     "gulp-gzip": "^1.4.0",
     "gulp-load-plugins": "^1.2.4",
-    "gulp-tar": "^1.9.0"
+    "gulp-tar": "^1.9.0",
+    "yargs": "^4.7.1"
   }
 }

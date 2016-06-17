@@ -2,6 +2,7 @@
 
   'use strict';
   var gulp = require('gulp');
+  var exec = require('child_process').exec;
   var $ = require('gulp-load-plugins')({
     pattern: ['gulp-*', 'gulp.*', 'del', 'imagemin-pngquant'],
     rename: {
@@ -78,6 +79,13 @@
       'scripts-watch',
       'styles-watch'
     ]);
+  });
+
+
+  gulp.task('publish', function () {
+    exec('cd .. && gulp tgz --module=module-template', function () {
+      console.info('[Success! Package path]:->', 'dist-module-packages/module-template.tar.gz');
+    });
   });
 
 }());
