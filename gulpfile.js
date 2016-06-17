@@ -28,13 +28,8 @@
 
   //if common has new ,you need update this package:
   gulp.task('tgz-common', function () {
-    var date = new Date();
-    var dateFormat = [
-      [date.getFullYear(), date.getMonth() + 1, date.getDate()].join(''),
-      [date.getHours(), date.getMinutes(), date.getSeconds()].join('')
-    ].join('');
     return gulp.src('common/dist/**')
-      .pipe($.tar('common-' + dateFormat + '.tar'
+      .pipe($.tar('common-latest.tar'
       ))
       .pipe($.gzip())
       .pipe(gulp.dest('dist-module-packages'));
@@ -52,7 +47,6 @@
       .pipe($.gzip())
       .pipe(gulp.dest('dist-module-packages'));
   });
-
 
 
 }());
