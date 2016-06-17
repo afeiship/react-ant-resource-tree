@@ -7,6 +7,9 @@ Native app load offline h5 resources by small package.
 ##demo url:
 + http://h5app-consumer.zaijiadd.com/module-template/index.html
 
+##preview dist:
+![dist preview](https://github.com/afeiship/native-offline-h5/blob/master/test/pacakge-size.jpg)
+
 ##resources:
 + http://zeptojs.com/
 + http://cn.vuejs.org/
@@ -31,5 +34,4 @@ Native app load offline h5 resources by small package.
 * [ ] Bower merge to one package
 * [ ] All modules need to modules directory
 
-##preview dist:
-+ ![dist preview](https://github.com/afeiship/native-offline-h5/blob/master/test/pacakge-size.jpg)
+
