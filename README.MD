@@ -30,3 +30,6 @@ Native app load offline h5 resources by small package.
 * [x] Yeoman generator `afeiship/generator-native-offline-h5`
 * [ ] Bower merge to one package
 * [ ] All modules need to modules directory
+
+##preview dist:
++ ![dist preview](https://github.com/afeiship/native-offline-h5/blob/master/test/pacakge-size.jpg)
