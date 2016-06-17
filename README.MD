@@ -7,4 +7,14 @@ Native app load offline h5 resources by small package.
 
 
 ##demo url:
-+ http://h5app-consumer.zaijiadd.com/_module_template/index.html
++ http://h5app-consumer.zaijiadd.com/module-template/index.html
+
+##resources:
++ http://zeptojs.com/
++ http://cn.vuejs.org/
++ http://ionicons.com/
+
+##usage:
+
+
+
