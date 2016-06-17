@@ -9,17 +9,21 @@
 <script type="text/javascript" src="../../bower_components/vue/dist/vue.min.js"></script>
 <script type="text/javascript" src="../../bower_components/zepto/zepto.min.js"></script>
 <script type="text/javascript">
+  //http://api.zaijiadd.com/v1/_sup/store/{store_id}/store_info.action
+
   $.ajax({
     type: 'GET',
-    url: './consumer-api/v1/store/7/qrcode_pay/daily_income.action',
+    url: '../consumer-api/v1/banner/list.action',
     data: {
       offset: 0,
-      size: 10
+      size: 10,
+      store_id: 7
     },
     headers: {
-      zjtoken: 'token test`test`1'
+      zjtoken: 'test`test`7'
     },
-    success:function(inResp){
+    success: function (inResp) {
+      debugger;
       console.log(inResp);
     }
   });
