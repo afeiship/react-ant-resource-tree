@@ -27,6 +27,7 @@
       .pipe(gulp.dest('.tmp/dist'));
   });
 
+  //if bower_components has new ,you need update this package:
   gulp.task('tgz-bower', function () {
     return gulp.src('bower_components/**')
       .pipe($.tar('bower_components.tar'
