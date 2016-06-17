@@ -27,5 +27,6 @@ Native app load offline h5 resources by small package.
   - your dist package file: dist-module-packages/<%= module_dir %>.tar.gz
 
 ##issues:
+* [x] Yeoman generator
 * [ ] Bower merge to one package
 * [ ] All modules need to modules directory
