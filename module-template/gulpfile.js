@@ -3,7 +3,10 @@
   'use strict';
   var gulp = require('gulp');
   var $ = require('gulp-load-plugins')({
-    pattern: ['gulp-*', 'gulp.*', 'del']
+    pattern: ['gulp-*', 'gulp.*', 'del', 'imagemin-pngquant'],
+    rename: {
+      'imagemin-pngquant': 'pngquant'
+    }
   });
 
   var sassOptions = {
@@ -14,6 +17,10 @@
   /* ================module build scripts Start====================== */
   gulp.task('images', function () {
     return gulp.src('src/images/*')
+      .pipe($.imagemin({
+        progressive: true,
+        use: [$.pngquant()]
+      }))
       .pipe(gulp.dest('dist/images'));
   });
 
