@@ -19,7 +19,8 @@ Native app load offline h5 resources by small package.
 
 ##usage:
 + create a new module && gulp serve:
-  - yo native-offline-h5 && cd $_
+  - yo native-offline-h5
+  - cd <%= module_dir %>
   - gulp
 + publish your project
   - cd <%= module_dir %>
