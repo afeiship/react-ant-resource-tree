@@ -7,6 +7,7 @@
   });
 
 
+  //provide package script:
   gulp.task('tgz', function () {
     var module_name = argv.module;
     return gulp.src([
@@ -18,9 +19,5 @@
       .pipe(gulp.dest('dist-module-packages'));
   });
 
-
-  gulp.task('publish', function () {
-    console.log('gulp tgz --module=<%= module-template %>');
-  });
 
 }());
