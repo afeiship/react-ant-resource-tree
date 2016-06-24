@@ -3,15 +3,12 @@
   var gulp = require('gulp');
   var argv = require('yargs').argv;
   var module_name = argv.module;
+  var package_version = require('./package_version.json');
   var exec = require('child_process').exec;
   var $ = require('gulp-load-plugins')({
     pattern: ['gulp-*', 'gulp.*', 'del']
   });
-  var package_version = {
-    'bower_components': '1.0.0',
-    'common': '1.0.0',
-    'pay-select': '1.0.0'
-  };
+
 
   gulp.task('clean', function () {
     return $.del('dist-module-packages');
@@ -57,7 +54,7 @@
 
   //test: gulp zip-module --module=pay-select
   gulp.task('zip-module', function () {
-    var dir_name = module_name + '_' + package_version[module_name];
+    var dir_name = module_name + '_' + package_version['packages'][module_name];
     gulp.src(module_name + '/**')
       .pipe($.filter([
         '**',
@@ -73,7 +70,7 @@
   });
 
 
-  gulp.task('publish', ['clean', 'publish-vendor'], function () {
+  gulp.task('publish', ['publish-vendor'], function () {
     exec('cd pay-select && gulp publish');
   });
 
