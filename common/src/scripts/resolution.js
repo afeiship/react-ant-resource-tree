@@ -10,11 +10,11 @@
     if (width / dpr > 750) {
       width = 750 * dpr;
     }
-    docEl.dataset.width = width
+    docEl.dataset.width = width;
     docEl.dataset.percent = 100 * (width / 750);
     docEl.style.fontSize = 100 * (width / 750) + 'px';
   };
-  recalc()
+  recalc();
   if (!doc.addEventListener) return;
   win.addEventListener(resizeEvt, recalc, false);
 })(document, window);
