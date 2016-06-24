@@ -3,14 +3,14 @@
   var gulp = require('gulp');
   var argv = require('yargs').argv;
   var module_name = argv.module;
+  var $ = require('gulp-load-plugins')({
+    pattern: ['gulp-*', 'gulp.*', 'del']
+  });
   var package_version = {
     'bower_components': '1.0.0',
     'common': '1.0.1',
     'pay-select': '1.0.0'
   };
-  var $ = require('gulp-load-plugins')({
-    pattern: ['gulp-*', 'gulp.*', 'del']
-  });
 
   gulp.task('clean', function () {
     return $.del('dist-module-packages', '.tmp');
