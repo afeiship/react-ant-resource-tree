@@ -3,7 +3,11 @@
   var gulp = require('gulp');
   var argv = require('yargs').argv;
   var module_name = argv.module;
-  var dateStr = (new Date()).toISOString().slice(0, 10);
+  var package_version = {
+    'bower_components': '1.0.0',
+    'common': '1.0.1',
+    'pay-select': '1.0.0'
+  };
   var $ = require('gulp-load-plugins')({
     pattern: ['gulp-*', 'gulp.*', 'del']
   });
@@ -29,34 +33,34 @@
 
   //if bower_components has new ,you need update this package:
   //gulp tgz-bower
-  gulp.task('tgz-bower', function () {
+  gulp.task('zip-bower', function () {
     return gulp.src('bower_components/**')
-      .pipe($.tar('bower_components.tar'
-      ))
-      .pipe($.gzip())
+      .pipe($.zip('bower_components_' + package_version.bower_components + '.zip'))
       .pipe(gulp.dest('dist-module-packages'));
   });
 
   //if common has new ,you need update this package:
   //gulp tgz-common
-  gulp.task('tgz-common', function () {
-    return gulp.src('common/dist/**')
-      .pipe($.tar('common.tar'
-      ))
-      .pipe($.gzip())
+  gulp.task('zip-common', function () {
+    return gulp.src('common/**')
+      .pipe($.filter(['**', '!common/src/**', '!common/gulpfile.js']))
+      .pipe($.zip('common_' + package_version.common + '.zip'))
       .pipe(gulp.dest('dist-module-packages'));
   });
 
+  gulp.task('publish-vendor', [
+    'zip-bower',
+    'zip-common'
+  ]);
+
 
   //test: gulp tgz --module=pay-select
-  gulp.task('tgz', [
+  gulp.task('zip-module', [
     'copy-html',
     'copy-dist-files'
   ], function () {
     gulp.src('.tmp/**')
-      .pipe($.debug())
-      .pipe($.tar(module_name + '.tar'))
-      .pipe($.gzip())
+      .pipe($.zip(module_name + '_' + package_version[module_name] + '.zip'))
       .pipe(gulp.dest('dist-module-packages'));
   });
 

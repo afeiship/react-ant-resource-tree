@@ -84,8 +84,8 @@
 
 
   gulp.task('publish', function () {
-    exec('cd .. && gulp tgz --module=pay-select', function () {
-      console.info('[Success! Package path]:->', 'dist-module-packages/pay-select.tar.gz');
+    exec('cd .. && gulp zip-module --module=pay-select', function () {
+      console.info('[Success! Package path]:->', 'dist-module-packages/pay-select.zip');
     });
   });
 
