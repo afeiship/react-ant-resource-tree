@@ -3,48 +3,49 @@
   var gulp = require('gulp');
   var argv = require('yargs').argv;
   var module_name = argv.module;
+  var exec = require('child_process').exec;
   var $ = require('gulp-load-plugins')({
     pattern: ['gulp-*', 'gulp.*', 'del']
   });
   var package_version = {
     'bower_components': '1.0.0',
-    'common': '1.0.1',
+    'common': '1.0.0',
     'pay-select': '1.0.0'
   };
 
   gulp.task('clean', function () {
-    return $.del('dist-module-packages', '.tmp');
-  });
-
-  //provide package script:
-  //test: gulp copy-html --module=pay-select
-  gulp.task('copy-html', ['clean'], function () {
-    return gulp.src(module_name + '/index.html')
-      .pipe(gulp.dest('.tmp'));
-  });
-
-  //test: gulp copy-dist-files --module=pay-select
-  gulp.task('copy-dist-files', ['clean'], function () {
-    return gulp.src([
-        module_name + '/dist/**'
-      ])
-      .pipe(gulp.dest('.tmp/dist'));
+    return $.del('dist-module-packages');
   });
 
   //if bower_components has new ,you need update this package:
   //gulp tgz-bower
   gulp.task('zip-bower', function () {
+    var dir_name = 'bower_components_' + package_version.bower_components;
     return gulp.src('bower_components/**')
-      .pipe($.zip('bower_components_' + package_version.bower_components + '.zip'))
+      .pipe($.rename(function (path) {
+        path.dirname = dir_name + '/' + path.dirname;
+      }))
+      .pipe($.zip(dir_name + '.zip'))
       .pipe(gulp.dest('dist-module-packages'));
+  });
+  gulp.task('build-common', function () {
+    exec('cd common && gulp');
   });
 
   //if common has new ,you need update this package:
   //gulp tgz-common
-  gulp.task('zip-common', function () {
+  gulp.task('zip-common', ['build-common'], function () {
+    var dir_name = 'common_' + package_version.common;
     return gulp.src('common/**')
-      .pipe($.filter(['**', '!common/src/**', '!common/gulpfile.js']))
-      .pipe($.zip('common_' + package_version.common + '.zip'))
+      .pipe($.filter([
+        '**',
+        '!common/src/**',
+        '!common/gulpfile.js'
+      ]))
+      .pipe($.rename(function (path) {
+        path.dirname = dir_name + '/' + path.dirname;
+      }))
+      .pipe($.zip(dir_name + '.zip'))
       .pipe(gulp.dest('dist-module-packages'));
   });
 
@@ -54,14 +55,26 @@
   ]);
 
 
-  //test: gulp tgz --module=pay-select
-  gulp.task('zip-module', [
-    'copy-html',
-    'copy-dist-files'
-  ], function () {
-    gulp.src('.tmp/**')
-      .pipe($.zip(module_name + '_' + package_version[module_name] + '.zip'))
+  //test: gulp zip-module --module=pay-select
+  gulp.task('zip-module', function () {
+    var dir_name = module_name + '_' + package_version[module_name];
+    gulp.src(module_name + '/**')
+      .pipe($.filter([
+        '**',
+        '!' + module_name + '/src/**',
+        '!' + module_name + '/gulpfile.js',
+        '!' + module_name + '/README.MD'
+      ]))
+      .pipe($.rename(function (path) {
+        path.dirname = dir_name + '/' + path.dirname;
+      }))
+      .pipe($.zip(dir_name + '.zip'))
       .pipe(gulp.dest('dist-module-packages'));
+  });
+
+
+  gulp.task('publish', ['clean', 'publish-vendor'], function () {
+    exec('cd pay-select && gulp publish');
   });
 
 
