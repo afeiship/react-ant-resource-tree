@@ -52,6 +52,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   static version = '__VERSION__';
   static defaultProps = {
     lang: 'zh-CN',
+    module: 'admin',
     orderKey: 'sequence',
     extraActions: ['add', 'refresh'],
     rowKey: 'id',
