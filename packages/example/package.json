@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@jswork/react-ant-status-switch": "^1.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@ebay/nice-form-react": "^2.0.3",
     "@jswork/next": "^1.2.2",
     "@jswork/next-replace-in-file": "^1.0.0",
     "@jswork/presets-tailwind": "^1.1.8",
