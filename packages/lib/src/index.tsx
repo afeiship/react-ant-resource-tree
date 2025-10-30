@@ -19,6 +19,7 @@ export type ReactAntResourceTreeProps = CardProps & {
   name: string;
   lang?: string;
   module?: string;
+  fetcher?: (params: any) => Promise<{ items: AcTreeProps['items'] }>;
   header?: ReactNode;
   footer?: ReactNode;
   params?: any;
@@ -31,6 +32,7 @@ export type ReactAntResourceTreeProps = CardProps & {
 
 type ReactAntResourceTreeState = {
   loading?: boolean;
+  items?: AcTreeProps['items'];
 };
 
 const locales = {
@@ -51,13 +53,19 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   static version = '__VERSION__';
   static defaultProps = {
     lang: 'zh-CN',
-    items: [],
     orderKey: 'sequence',
+    items: [],
+    hasBack: false,
+    actions: [],
+    rowKey: 'id',
+    params: {},
+    header: null,
+    footer: null,
   };
 
   private harmonyEvents: ReactHarmonyEvents | null = null;
   static event: EventMittNamespace.EventMitt;
-  static events = ['edit', 'destroy'];
+  static events = ['edit', 'destroy', 'refetch'];
   public eventBus: EventMittNamespace.EventMitt = ReactAntResourceTree.event;
 
 
@@ -70,11 +78,29 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     this.harmonyEvents?.destroy();
   }
 
+  fetchData = async () => {
+    const { params, fetcher } = this.props;
+    this.setState({ loading: true })
+    const response = await fetcher?.(params);
+    this.setState({ items: response?.items ?? [], loading: false });
+  };
+
   /* ----- public eventBus methods start ----- */
-  edit = (item: any) => {
+  /**
+   * CURD(page): Redirect to edit page.
+   * @param item 
+   */
+  public edit = (item: any) => {
     const { name, module, rowKey } = this.props;
     const id = nx.get(item, rowKey!);
     nx.$nav(`/${module}/${name}/${id}/edit`);
+  };
+
+  /**
+   * CURD(action): Fetch data from backend.
+   */
+  public refetch = () => {
+    void this.fetchData();
   };
 
   /**
@@ -82,16 +108,13 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
    */
   public destroy = (item) => {
     const { name } = this.props;
-    console.log('name/item: ', name, item);
-    // this.setState({ isLoading: true });
-    // nx.$api[`${name}_destroy`](item)
-    //   .then(this.refetch)
-    //   .finally(() => {
-    //     onDestroyComplete?.(item);
-    //     this.setState({ isLoading: false });
-    //   });
+    this.setState({ loading: true });
+    nx.$api[`${name}_destroy`](item)
+      .then(this.refetch)
+      .finally(() => {
+        this.setState({ loading: false });
+      });
   };
-
   /* ----- public eventBus methods end   ----- */
 
   t = (inKey) => {
@@ -99,7 +122,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     return nx.get(locales, `${lang}.${inKey}`, inKey);
   };
 
-  handleTitleRender = (item) => {
+  handleTemplate = (item) => {
     const { orderKey } = this.props;
     const order = nx.get(item, orderKey!, 0);
     return (
@@ -130,7 +153,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
           selectable={false}
           defaultExpandAll
           treeData={items}
-          titleRender={this.handleTitleRender}
+          titleRender={this.handleTemplate}
         />
         {footer}
       </Card>
