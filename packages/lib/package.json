@@ -34,6 +34,7 @@
   },
   "peerDependencies": {
     "@jswork/antd-components": "*",
+    "@jswork/next": "*",
     "antd": "*",
     "classnames": "*",
     "react": "*",
