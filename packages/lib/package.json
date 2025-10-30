@@ -1,6 +1,6 @@
 {
   "name": "@jswork/react-ant-resource-tree",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/main.cjs.js",
   "module": "dist/main.esm.js",
   "types": "dist/main.d.ts",
@@ -44,5 +44,11 @@
   "dependencies": {
     "@jswork/event-mitt": "^2.0.17",
     "@jswork/harmony-events": "^1.2.11"
-  }
+  },
+  "keywords": [
+    "antd",
+    "curd",
+    "resource",
+    "tree"
+  ]
 }
