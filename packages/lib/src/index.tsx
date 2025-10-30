@@ -12,6 +12,7 @@ const CLASS_NAME = 'react-ant-resource-tree';
 declare global {
   interface NxStatic {
     $event: any;
+    $nav: any;
   }
 }
 
@@ -87,6 +88,12 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     this.harmonyEvents?.destroy();
   }
 
+  t = (inKey: string) => {
+    const { lang } = this.props;
+    return nx.get(locales, `${lang}.${inKey}`, inKey);
+  };
+
+
   fetchData = async () => {
     const { params, fetcher } = this.props;
     this.setState({ loading: true })
@@ -103,7 +110,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     console.log('edit!');
     const { name, module, rowKey } = this.props;
     const id = nx.get(item, rowKey!);
-    nx.$nav(`/${module}/${name}/${id}/edit`);
+    nx.$nav?.(`/${module}/${name}/${id}/edit`);
   };
 
   /**
@@ -116,21 +123,16 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   /**
    * CURD(action): Delete data from backend.
    */
-  public destroy = (item) => {
+  public destroy = (payload: any) => {
     const { name } = this.props;
     this.setState({ loading: true });
-    nx.$api[`${name}_destroy`](item)
+    nx.$api[`${name}_destroy`](payload)
       .then(this.refetch)
       .finally(() => {
         this.setState({ loading: false });
       });
   };
   /* ----- public eventBus methods end   ----- */
-
-  t = (inKey: string) => {
-    const { lang } = this.props;
-    return nx.get(locales, `${lang}.${inKey}`, inKey);
-  };
 
   handleTemplate = (item) => {
     const { orderKey } = this.props;
@@ -141,8 +143,8 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
           {item.label}
         </Badge>
         <Space>
-          <a onClick={nx.noop}>{this.t('edit')}</a>
-          <Popconfirm title={this.t('confirm_ok')} onConfirm={nx.noop} onCancel={nx.noop}>
+          <a onClick={this.edit}>{this.t('edit')}</a>
+          <Popconfirm title={this.t('confirm_ok')} onConfirm={this.destroy}>
             <a>{this.t('delete')}</a>
           </Popconfirm>
         </Space>
