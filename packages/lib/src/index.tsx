@@ -21,10 +21,10 @@ export type ReactAntResourceTreeProps = CardProps & {
   lang?: string;
   module?: string;
   fetcher?: (params?: any) => Promise<{ data: AcTreeProps['items'] }>;
+  extraActions?: string[];
   header?: ReactNode;
   footer?: ReactNode;
   params?: any;
-  hasBack?: boolean;
   rowKey?: string;
   orderKey?: string;
 };
@@ -53,7 +53,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   static defaultProps = {
     lang: 'zh-CN',
     orderKey: 'sequence',
-    hasBack: false,
+    extraActions: ['add', 'refresh'],
     rowKey: 'id',
     params: {},
     header: null,
@@ -66,12 +66,15 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   public eventBus: EventMittNamespace.EventMitt = ReactAntResourceTree.event;
 
   get extraView() {
-    const { hasBack } = this.props;
+    const { extraActions } = this.props;
+    const items = {
+      'add': <BtnCreate key="add" onClick={this.add} />,
+      'refresh': <BtnRefresh key="refresh" onClick={this.refetch} />,
+      'back': <BtnBack key="back" onClick={() => history.back()} />
+    }
     return (
       <Space>
-        <BtnCreate onClick={this.add} />
-        <BtnRefresh onClick={this.refetch} />
-        {hasBack && <BtnBack onClick={() => history.back()} />}
+        {extraActions?.map(key => items[key])}
       </Space>
     )
   }
@@ -162,7 +165,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   };
 
   render() {
-    const { className, header, footer, orderKey, hasBack, rowKey, params, fetcher, children, ...rest } = this.props;
+    const { className, header, footer, orderKey, extraActions, rowKey, params, fetcher, children, ...rest } = this.props;
     const { items, loading } = this.state;
 
     return (

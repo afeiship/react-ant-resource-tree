@@ -16,7 +16,7 @@ function App() {
         <div className="badge badge-warning absolute right-0 top-0 m-4">
           Build Time: {BUILD_TIME}
         </div>
-        <ReactAntResourceTree title="Tree管理" name="categories" fetcher={fetcher} />
+        <ReactAntResourceTree title="Tree管理" name="categories" fetcher={fetcher} extraActions={['refresh', 'add', 'back']} />
       </div>
     </ConfigProvider>
   );
