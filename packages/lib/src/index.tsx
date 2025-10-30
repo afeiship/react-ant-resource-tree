@@ -2,7 +2,7 @@
 import cx from 'classnames';
 import React, { Component, ReactNode } from 'react';
 import { Badge, Card, CardProps, Popconfirm, Space, Tree } from 'antd';
-import { AcTreeProps } from '@jswork/antd-components';
+import { AcTreeProps, BtnBack } from '@jswork/antd-components';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
 import nx from '@jswork/next';
@@ -19,14 +19,12 @@ export type ReactAntResourceTreeProps = CardProps & {
   name: string;
   lang?: string;
   module?: string;
-  fetcher?: (params: any) => Promise<{ items: AcTreeProps['items'] }>;
+  fetcher?: (params?: any) => Promise<{ data: AcTreeProps['items'] }>;
   header?: ReactNode;
   footer?: ReactNode;
   params?: any;
   hasBack?: boolean;
-  actions?: string[];
   rowKey?: string;
-  items?: AcTreeProps['items'];
   orderKey?: string;
 };
 
@@ -54,9 +52,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   static defaultProps = {
     lang: 'zh-CN',
     orderKey: 'sequence',
-    items: [],
     hasBack: false,
-    actions: [],
     rowKey: 'id',
     params: {},
     header: null,
@@ -68,10 +64,23 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   static events = ['edit', 'destroy', 'refetch'];
   public eventBus: EventMittNamespace.EventMitt = ReactAntResourceTree.event;
 
+  get extraView() {
+    return <BtnBack onClick={() => history.back()} />
+  }
+
+  constructor(props: ReactAntResourceTreeProps) {
+    super(props);
+    this.state = {
+      items: [],
+      loading: false,
+    }
+  }
+
 
   async componentDidMount() {
     this.harmonyEvents = ReactHarmonyEvents.create(this);
     this.eventBus = ReactAntResourceTree.event;
+    void this.fetchData();
   }
 
   componentWillUnmount() {
@@ -82,7 +91,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     const { params, fetcher } = this.props;
     this.setState({ loading: true })
     const response = await fetcher?.(params);
-    this.setState({ items: response?.items ?? [], loading: false });
+    this.setState({ items: response?.data ?? [], loading: false });
   };
 
   /* ----- public eventBus methods start ----- */
@@ -91,6 +100,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
    * @param item 
    */
   public edit = (item: any) => {
+    console.log('edit!');
     const { name, module, rowKey } = this.props;
     const id = nx.get(item, rowKey!);
     nx.$nav(`/${module}/${name}/${id}/edit`);
@@ -117,7 +127,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   };
   /* ----- public eventBus methods end   ----- */
 
-  t = (inKey) => {
+  t = (inKey: string) => {
     const { lang } = this.props;
     return nx.get(locales, `${lang}.${inKey}`, inKey);
   };
@@ -141,11 +151,15 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   };
 
   render() {
-    const { className, items, header, footer, orderKey, ...rest } = this.props;
+    const { className, header, footer, orderKey, hasBack, rowKey, params, fetcher, children, ...rest } = this.props;
+    const { items, loading } = this.state;
+
     return (
       <Card
         data-component={CLASS_NAME}
         className={cx(CLASS_NAME, className)}
+        extra={this.extraView}
+        loading={loading}
         {...rest}>
         {header}
         <Tree
