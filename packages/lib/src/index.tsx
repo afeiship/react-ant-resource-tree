@@ -2,7 +2,7 @@
 import cx from 'classnames';
 import React, { Component, ReactNode } from 'react';
 import { Badge, Card, CardProps, Popconfirm, Space, Tree } from 'antd';
-import { AcTreeProps, BtnBack } from '@jswork/antd-components';
+import { AcTreeProps, BtnBack, BtnCreate, BtnRefresh } from '@jswork/antd-components';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
 import nx from '@jswork/next';
@@ -62,11 +62,18 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
 
   private harmonyEvents: ReactHarmonyEvents | null = null;
   static event: EventMittNamespace.EventMitt;
-  static events = ['edit', 'destroy', 'refetch'];
+  static events = ['add', 'edit', 'destroy', 'refetch'];
   public eventBus: EventMittNamespace.EventMitt = ReactAntResourceTree.event;
 
   get extraView() {
-    return <BtnBack onClick={() => history.back()} />
+    const { hasBack } = this.props;
+    return (
+      <Space>
+        <BtnCreate onClick={this.add} />
+        <BtnRefresh onClick={this.refetch} />
+        {hasBack && <BtnBack onClick={() => history.back()} />}
+      </Space>
+    )
   }
 
   constructor(props: ReactAntResourceTreeProps) {
@@ -76,7 +83,6 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
       loading: false,
     }
   }
-
 
   async componentDidMount() {
     this.harmonyEvents = ReactHarmonyEvents.create(this);
@@ -102,12 +108,15 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   };
 
   /* ----- public eventBus methods start ----- */
+  public add = () => {
+    const { name, module } = this.props;
+    nx.$nav?.(`/${module}/${name}/add`);
+  }
   /**
    * CURD(page): Redirect to edit page.
    * @param item 
    */
   public edit = (item: any) => {
-    console.log('edit!');
     const { name, module, rowKey } = this.props;
     const id = nx.get(item, rowKey!);
     nx.$nav?.(`/${module}/${name}/${id}/edit`);
