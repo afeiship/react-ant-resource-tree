@@ -1,8 +1,8 @@
 // import noop from '@jswork/noop';
 import cx from 'classnames';
-import React, { ReactNode, Component } from 'react';
-import { Badge, Card, CardProps, Tree, Popconfirm, Space } from 'antd';
-import { AcTree, AcTreeProps } from '@jswork/antd-components';
+import React, { Component, ReactNode } from 'react';
+import { Badge, Card, CardProps, Popconfirm, Space, Tree } from 'antd';
+import { AcTreeProps } from '@jswork/antd-components';
 
 import nx from '@jswork/next';
 
@@ -26,11 +26,11 @@ export type ReactAntResourceTreeProps = CardProps & {
   apiPath?: string;
   items?: AcTreeProps['items'];
   orderKey?: string;
-  // columns: AcTableColumn[];
-  // tableProps?: Omit<AcTableProps, 'name' | 'columns' | 'params'>;
 };
 
-type ReactAntResourceTreeState = {};
+type ReactAntResourceTreeState = {
+  loading?: boolean;
+};
 
 const locales = {
   'zh-CN': {
@@ -54,11 +54,11 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     orderKey: 'sequence',
   };
 
-  current: any = null;
-
   constructor(props: ReactAntResourceTreeProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: false,
+    };
   }
 
   t = (inKey) => {
@@ -66,34 +66,21 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     return nx.get(locales, `${lang}.${inKey}`, inKey);
   };
 
-  edit = () => {
-  };
-  del = () => {
-  };
-
-  template = ({ item, index }, cb) => {
-    const { value, label } = item;
+  handleTitleRender = (item) => {
     const { orderKey } = this.props;
-    const update = () => (this.current = { index, item });
-    const order = nx.get(item, orderKey!);
-    const isLeaf = Boolean(!item.children);
-
-    const titleView = (
-      <Space onMouseEnter={update}>
-        <Badge size="small" count={order}>
-          {label}
-        </Badge>
-        <a onClick={this.edit}>{this.t('edit')}</a>
-        <Popconfirm title={this.t('confirm_ok')} onConfirm={this.del} onCancel={stop}>
-          <a onClick={stop}>{this.t('delete')}</a>
-        </Popconfirm>
-      </Space>
-    );
-
+    const order = nx.get(item, orderKey!, 0);
     return (
-      <Tree.TreeNode key={value} isLeaf={isLeaf} title={titleView}>
-        {cb?.()}
-      </Tree.TreeNode>
+      <Space size="middle">
+        <Badge size="small" count={order}>
+          {item.label}
+        </Badge>
+        <Space>
+          <a onClick={nx.noop}>{this.t('edit')}</a>
+          <Popconfirm title={this.t('confirm_ok')} onConfirm={nx.noop} onCancel={nx.noop}>
+            <a>{this.t('delete')}</a>
+          </Popconfirm>
+        </Space>
+      </Space>
     );
   };
 
@@ -105,11 +92,12 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
         className={cx(CLASS_NAME, className)}
         {...rest}>
         {header}
-        <AcTree
+        <Tree
           showLine
           selectable={false}
-          items={items}
-          template={this.template}
+          defaultExpandAll
+          treeData={items}
+          titleRender={this.handleTitleRender}
         />
         {footer}
       </Card>
