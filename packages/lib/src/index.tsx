@@ -156,8 +156,8 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
           {item.label}
         </Badge>
         <Space>
-          <a onClick={this.edit}>{this.t('edit')}</a>
-          <Popconfirm title={this.t('confirm_ok')} onConfirm={this.destroy}>
+          <a onClick={() => this.edit(item)}>{this.t('edit')}</a>
+          <Popconfirm title={this.t('confirm_ok')} onConfirm={() => this.destroy(item)}>
             <a>{this.t('delete')}</a>
           </Popconfirm>
         </Space>
