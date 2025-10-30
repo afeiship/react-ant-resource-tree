@@ -3,7 +3,8 @@ import cx from 'classnames';
 import React, { Component, ReactNode } from 'react';
 import { Badge, Card, CardProps, Popconfirm, Space, Tree } from 'antd';
 import { AcTreeProps } from '@jswork/antd-components';
-
+import type { EventMittNamespace } from '@jswork/event-mitt';
+import { ReactHarmonyEvents } from '@jswork/harmony-events';
 import nx from '@jswork/next';
 
 const CLASS_NAME = 'react-ant-resource-tree';
@@ -23,7 +24,7 @@ export type ReactAntResourceTreeProps = CardProps & {
   params?: any;
   hasBack?: boolean;
   actions?: string[];
-  apiPath?: string;
+  rowKey?: string;
   items?: AcTreeProps['items'];
   orderKey?: string;
 };
@@ -54,12 +55,44 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     orderKey: 'sequence',
   };
 
-  constructor(props: ReactAntResourceTreeProps) {
-    super(props);
-    this.state = {
-      loading: false,
-    };
+  private harmonyEvents: ReactHarmonyEvents | null = null;
+  static event: EventMittNamespace.EventMitt;
+  static events = ['edit', 'destroy'];
+  public eventBus: EventMittNamespace.EventMitt = ReactAntResourceTree.event;
+
+
+  async componentDidMount() {
+    this.harmonyEvents = ReactHarmonyEvents.create(this);
+    this.eventBus = ReactAntResourceTree.event;
   }
+
+  componentWillUnmount() {
+    this.harmonyEvents?.destroy();
+  }
+
+  /* ----- public eventBus methods start ----- */
+  edit = (item: any) => {
+    const { name, module, rowKey } = this.props;
+    const id = nx.get(item, rowKey!);
+    nx.$nav(`/${module}/${name}/${id}/edit`);
+  };
+
+  /**
+   * CURD(action): Delete data from backend.
+   */
+  public destroy = (item) => {
+    const { name } = this.props;
+    console.log('name/item: ', name, item);
+    // this.setState({ isLoading: true });
+    // nx.$api[`${name}_destroy`](item)
+    //   .then(this.refetch)
+    //   .finally(() => {
+    //     onDestroyComplete?.(item);
+    //     this.setState({ isLoading: false });
+    //   });
+  };
+
+  /* ----- public eventBus methods end   ----- */
 
   t = (inKey) => {
     const { lang } = this.props;
