@@ -1,28 +1,20 @@
 {
-  "name": "native-offline-h5",
-  "version": "0.0.0",
-  "description": "Native app load offline h5 resources by small package.",
-  "homepage": "https://github.com/afeiship/native-offline-h5",
-  "author": {
-    "name": "afei",
-    "email": "1290657123@qq.com"
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "del": "^2.2.0",
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^3.1.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-debug": "^2.1.2",
-    "gulp-filter": "^4.0.0",
-    "gulp-imagemin": "^3.0.1",
-    "gulp-load-plugins": "^1.2.4",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.3.2",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.5.3",
-    "gulp-zip": "^3.2.0",
-    "imagemin-pngquant": "^5.0.0",
-    "yargs": "^4.7.1"
+  "name": "react-ant-resource-tree",
+  "version": "1.0.0",
+  "description": "Antd resource tree.",
+  "homepage": "https://js.work",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "cd packages/example && yarn run dev",
+    "predocs": "rm -rf docs && node scripts/markdown.js",
+    "docs": "cd packages/example && yarn run build",
+    "postdocs": "cp -R packages/example/dist docs",
+    "preln:build": "yarn run docs",
+    "ln:build": "cd packages/lib && yarn run build",
+    "ln:publish": "cd packages/lib && yarn run release"
   }
 }
