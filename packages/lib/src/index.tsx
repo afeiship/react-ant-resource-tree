@@ -27,6 +27,7 @@ export type ReactAntResourceTreeProps = CardProps & {
   rowKey?: string;
   orderKey?: string;
   cardExtraProps?: Omit<AcCardExtrasProps, 'name' | 'lang'>;
+  treeProps?: Omit<AcTreeProps, 'items' | 'titleRender'>;
 };
 
 type ReactAntResourceTreeState = {
