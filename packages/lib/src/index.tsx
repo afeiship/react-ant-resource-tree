@@ -26,7 +26,7 @@ export type ReactAntResourceTreeProps = CardProps & {
   params?: any;
   rowKey?: string;
   orderKey?: string;
-  cardExtraProps?: AcCardExtrasProps;
+  cardExtraProps?: Omit<AcCardExtrasProps, 'name' | 'lang'>;
 };
 
 type ReactAntResourceTreeState = {
@@ -69,8 +69,8 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   private harmonyEvents: ReactHarmonyEvents | null = null;
 
   get extraView() {
-    const { cardExtraProps, name } = this.props;
-    return <AcCardExtras name={name} {...cardExtraProps} />;
+    const { cardExtraProps, name, lang } = this.props;
+    return <AcCardExtras name={name} lang={lang} {...cardExtraProps} />;
   }
 
   constructor(props: ReactAntResourceTreeProps) {
