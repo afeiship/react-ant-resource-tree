@@ -1,73 +1,100 @@
 [
   {
-    "label": "0-0",
+    "id": "0-0",
     "key": "0-0",
+    "label": "Dashboard",
+    "sequence": 1,
     "children": [
       {
-        "label": "0-0-0",
+        "id": "0-0-0",
         "key": "0-0-0",
+        "label": "Overview",
+        "sequence": 1,
         "children": [
           {
-            "label": "0-0-0-0",
-            "sequence": 1,
-            "key": "0-0-0-0"
+            "id": "0-0-0-0",
+            "key": "0-0-0-0",
+            "label": "Analytics",
+            "sequence": 1
           },
           {
-            "label": "0-0-0-1",
+            "id": "0-0-0-1",
             "key": "0-0-0-1",
+            "label": "Reports",
             "sequence": 2
           },
           {
-            "label": "0-0-0-2",
+            "id": "0-0-0-2",
             "key": "0-0-0-2",
-            "sequence": 10
+            "label": "Metrics",
+            "sequence": 3
           }
         ]
       },
       {
-        "label": "0-0-1",
+        "id": "0-0-1",
         "key": "0-0-1",
+        "label": "Monitoring",
+        "sequence": 2,
         "children": [
           {
-            "label": "0-0-1-0",
-            "key": "0-0-1-0"
+            "id": "0-0-1-0",
+            "key": "0-0-1-0",
+            "label": "Real-time Logs",
+            "sequence": 1
           },
           {
-            "label": "0-0-1-1",
-            "key": "0-0-1-1"
+            "id": "0-0-1-1",
+            "key": "0-0-1-1",
+            "label": "Alerts",
+            "sequence": 2
           },
           {
-            "label": "0-0-1-2",
-            "key": "0-0-1-2"
+            "id": "0-0-1-2",
+            "key": "0-0-1-2",
+            "label": "Health Check",
+            "sequence": 3
           }
         ]
       },
       {
-        "label": "0-0-2",
-        "key": "0-0-2"
+        "id": "0-0-2",
+        "key": "0-0-2",
+        "label": "Widgets",
+        "sequence": 3
       }
     ]
   },
   {
-    "label": "0-1",
+    "id": "0-1",
     "key": "0-1",
+    "label": "User Management",
+    "sequence": 2,
     "children": [
       {
-        "label": "0-1-0-0",
-        "key": "0-1-0-0"
+        "id": "0-1-0-0",
+        "key": "0-1-0-0",
+        "label": "User List",
+        "sequence": 1
       },
       {
-        "label": "0-1-0-1",
-        "key": "0-1-0-1"
+        "id": "0-1-0-1",
+        "key": "0-1-0-1",
+        "label": "Invite User",
+        "sequence": 2
       },
       {
-        "label": "0-1-0-2",
-        "key": "0-1-0-2"
+        "id": "0-1-0-2",
+        "key": "0-1-0-2",
+        "label": "Permissions",
+        "sequence": 3
       }
     ]
   },
   {
-    "label": "0-2",
-    "key": "0-2"
+    "id": "0-2",
+    "key": "0-2",
+    "label": "Settings",
+    "sequence": 3
   }
 ]

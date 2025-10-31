@@ -24,7 +24,6 @@ export type ReactAntResourceTreeProps = CardProps & {
   header?: ReactNode;
   footer?: ReactNode;
   params?: any;
-  rowKey?: string;
   orderKey?: string;
   cardExtraProps?: Omit<AcCardExtrasProps, 'name' | 'lang'>;
   treeProps?: Omit<AcTreeProps, 'items' | 'titleRender'>;
@@ -55,7 +54,6 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     lang: 'zh-CN',
     module: 'admin',
     orderKey: 'sequence',
-    rowKey: 'id',
     params: {},
     header: null,
     footer: null,
@@ -123,8 +121,8 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
    * @param item
    */
   public edit = (item: any) => {
-    const { name, module, rowKey } = this.props;
-    const id = nx.get(item, rowKey!);
+    const { name, module } = this.props;
+    const id = nx.get(item, 'key');
     nx.$nav?.(`/${module}/${name}/${id}/edit`);
   };
 
@@ -167,12 +165,95 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     );
   };
 
-  handleDragEnter = (info) => {
-    console.log('enter?', info);
-  };
+  handleDrop = (info: any) => {
+    const { orderKey = 'sequence' } = this.props;
+    const { dragNode, dropToGap, dropPosition, node } = info;
 
-  handleDrop = (info) => {
-    console.log('drop?', info);
+    // 深拷贝当前树数据
+    const data = JSON.parse(JSON.stringify(this.state.items || []));
+
+    // 1. 找到并移除被拖拽的节点
+    let dragObj: any = null;
+    const removeNode = (list: any[]): boolean => {
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].key === dragNode.key) {
+          dragObj = list.splice(i, 1)[0];
+          return true;
+        }
+        if (list[i].children?.length && removeNode(list[i].children)) {
+          // 清理空 children（可选）
+          if (list[i].children.length === 0) delete list[i].children;
+          return true;
+        }
+      }
+      return false;
+    };
+
+    removeNode(data);
+    if (!dragObj) return;
+
+    // 2. 插入逻辑
+    if (dropToGap) {
+      // 插入为兄弟节点
+      const findNodeLocation = (list: any[], targetKey: string): { parent: any[]; index: number } | null => {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].key === targetKey) {
+            return { parent: list, index: i };
+          }
+          if (list[i].children) {
+            const res = findNodeLocation(list[i].children, targetKey);
+            if (res) return res;
+          }
+        }
+        return null;
+      };
+
+      const loc = findNodeLocation(data, node.key);
+      let dropParent = data;
+      let dropIndex = 0;
+
+      if (loc) {
+        dropParent = loc.parent;
+        dropIndex = loc.index + (dropPosition > 0 ? 1 : 0);
+      } else {
+        // fallback: root level
+        dropIndex = data.findIndex((item) => item.key === node.key);
+        if (dropIndex === -1) dropIndex = dropPosition > 0 ? data.length : 0;
+        else dropIndex += dropPosition > 0 ? 1 : 0;
+      }
+
+      dropParent.splice(dropIndex, 0, dragObj);
+    } else {
+      // 插入为子节点：直接操作目标节点的 children
+      const insertAsChild = (list: any[]) => {
+        for (const item of list) {
+          if (item.key === node.key) {
+            if (!item.children) item.children = [];
+            item.children.unshift(dragObj); // 或 .push(dragObj)
+            return true;
+          }
+          if (item.children && insertAsChild(item.children)) {
+            return true;
+          }
+        }
+        return false;
+      };
+      insertAsChild(data);
+    }
+
+    // 3. 重新计算 sequence：仅表示同级顺序
+    const updateOrder = (list: any[]) => {
+      list.forEach((item, idx) => {
+        item[orderKey] = idx + 1; // 同级从 1 开始
+        if (item.children?.length) {
+          updateOrder(item.children); // 递归处理子级，子级有自己的 sequence
+        }
+      });
+    };
+    updateOrder(data);
+
+    // 4. 更新状态
+    this.setState({ items: data });
   };
 
   render() {
@@ -181,7 +262,6 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
       header,
       footer,
       orderKey,
-      rowKey,
       params,
       fetcher,
       children,
@@ -205,7 +285,6 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
           defaultExpandAll
           draggable
           blockNode
-          onDragEnter={this.handleDragEnter}
           onDrop={this.handleDrop}
           treeData={items}
           titleRender={this.handleTemplate}
