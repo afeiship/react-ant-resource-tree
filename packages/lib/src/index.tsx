@@ -166,6 +166,14 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     );
   };
 
+  handleDragEnter = (info) => {
+    console.log('enter?', info);
+  };
+
+  handleDrop = (info) => {
+    console.log('drop?', info);
+  };
+
   render() {
     const {
       className,
@@ -193,6 +201,10 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
           showLine
           selectable={false}
           defaultExpandAll
+          draggable
+          blockNode
+          onDragEnter={this.handleDragEnter}
+          onDrop={this.handleDrop}
           treeData={items}
           titleRender={this.handleTemplate}
         />
