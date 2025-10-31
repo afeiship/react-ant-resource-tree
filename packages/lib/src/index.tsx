@@ -186,6 +186,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
       fetcher,
       children,
       cardExtraProps,
+      treeProps,
       ...rest
     } = this.props;
     const { items, loading } = this.state;
@@ -208,6 +209,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
           onDrop={this.handleDrop}
           treeData={items}
           titleRender={this.handleTemplate}
+          {...treeProps}
         />
         {footer}
       </Card>
