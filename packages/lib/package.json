@@ -35,6 +35,8 @@
   "peerDependencies": {
     "@jswork/antd-components": "*",
     "@jswork/next": "*",
+    "@jswork/event-mitt": "*",
+    "@jswork/harmony-events": "*",
     "antd": "*",
     "classnames": "*",
     "react": "*",
