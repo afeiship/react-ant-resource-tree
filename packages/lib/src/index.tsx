@@ -166,7 +166,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   };
 
   handleDrop = (info: any) => {
-    const { orderKey = 'sequence' } = this.props;
+    const { orderKey } = this.props;
     const { dragNode, dropToGap, dropPosition, node } = info;
 
     // 深拷贝当前树数据
@@ -244,12 +244,13 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     // 3. 重新计算 sequence：仅表示同级顺序
     const updateOrder = (list: any[]) => {
       list.forEach((item, idx) => {
-        item[orderKey] = idx + 1; // 同级从 1 开始
+        item[orderKey!] = idx + 1; // 同级从 1 开始
         if (item.children?.length) {
           updateOrder(item.children); // 递归处理子级，子级有自己的 sequence
         }
       });
     };
+
     updateOrder(data);
 
     // 4. 更新状态

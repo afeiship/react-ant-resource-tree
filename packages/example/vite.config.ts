@@ -6,6 +6,9 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: '',
   plugins: [react()],
+  server: {
+    allowedHosts: ['demo.frp.js.work'],
+  },
   define: {
     BUILD_TIME: JSON.stringify(sdf('datetime')),
   },
