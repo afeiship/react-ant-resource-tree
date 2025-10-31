@@ -2,7 +2,7 @@
 import cx from 'classnames';
 import React, { Component, ReactNode } from 'react';
 import { Badge, Card, CardProps, Popconfirm, Space, Tree } from 'antd';
-import { AcTreeProps, BtnBack, BtnCreate, BtnRefresh } from '@jswork/antd-components';
+import { AcCardExtras, AcCardExtrasProps, AcTreeProps } from '@jswork/antd-components';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
 import nx from '@jswork/next';
@@ -21,12 +21,12 @@ export type ReactAntResourceTreeProps = CardProps & {
   lang?: string;
   module?: string;
   fetcher?: (params?: any) => Promise<{ data: AcTreeProps['items'] }>;
-  extraActions?: string[];
   header?: ReactNode;
   footer?: ReactNode;
   params?: any;
   rowKey?: string;
   orderKey?: string;
+  cardExtraProps?: AcCardExtrasProps;
 };
 
 type ReactAntResourceTreeState = {
@@ -54,30 +54,23 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     lang: 'zh-CN',
     module: 'admin',
     orderKey: 'sequence',
-    extraActions: ['add', 'refresh'],
     rowKey: 'id',
     params: {},
     header: null,
     footer: null,
+    cardExtraProps: {
+      actions: ['add', 'refresh'],
+    },
   };
 
-  private harmonyEvents: ReactHarmonyEvents | null = null;
   static event: EventMittNamespace.EventMitt;
   static events = ['add', 'edit', 'destroy', 'refetch'];
   public eventBus: EventMittNamespace.EventMitt = ReactAntResourceTree.event;
+  private harmonyEvents: ReactHarmonyEvents | null = null;
 
   get extraView() {
-    const { extraActions } = this.props;
-    const items = {
-      'add': <BtnCreate key="add" onClick={this.add} />,
-      'refresh': <BtnRefresh key="refresh" onClick={this.refetch} />,
-      'back': <BtnBack key="back" onClick={() => history.back()} />
-    }
-    return (
-      <Space>
-        {extraActions?.map(key => items[key])}
-      </Space>
-    )
+    const { cardExtraProps, name } = this.props;
+    return <AcCardExtras name={name} {...cardExtraProps} />;
   }
 
   constructor(props: ReactAntResourceTreeProps) {
@@ -85,13 +78,21 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     this.state = {
       items: [],
       loading: false,
-    }
+    };
   }
 
   async componentDidMount() {
     this.harmonyEvents = ReactHarmonyEvents.create(this);
     this.eventBus = ReactAntResourceTree.event;
     void this.fetchData();
+  }
+
+  async componentDidUpdate(prevProps: ReactAntResourceTreeProps) {
+    const { params, fetcher } = this.props;
+    const shouldFetch = params !== prevProps.params || fetcher !== prevProps.fetcher;
+    if (shouldFetch) {
+      void this.fetchData();
+    }
   }
 
   componentWillUnmount() {
@@ -106,7 +107,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
 
   fetchData = async () => {
     const { params, fetcher } = this.props;
-    this.setState({ loading: true })
+    this.setState({ loading: true });
     const response = await fetcher?.(params);
     this.setState({ items: response?.data ?? [], loading: false });
   };
@@ -115,10 +116,10 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   public add = () => {
     const { name, module } = this.props;
     nx.$nav?.(`/${module}/${name}/add`);
-  }
+  };
   /**
    * CURD(page): Redirect to edit page.
-   * @param item 
+   * @param item
    */
   public edit = (item: any) => {
     const { name, module, rowKey } = this.props;
@@ -166,7 +167,18 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
   };
 
   render() {
-    const { className, header, footer, orderKey, extraActions, rowKey, params, fetcher, children, ...rest } = this.props;
+    const {
+      className,
+      header,
+      footer,
+      orderKey,
+      rowKey,
+      params,
+      fetcher,
+      children,
+      cardExtraProps,
+      ...rest
+    } = this.props;
     const { items, loading } = this.state;
 
     return (
