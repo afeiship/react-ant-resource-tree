@@ -63,7 +63,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     footer: null,
     draggable: false,
     cardExtraProps: {
-      actions: ['add', 'refresh'],
+      actions: ['add', 'refetch'],
     },
   };
 
