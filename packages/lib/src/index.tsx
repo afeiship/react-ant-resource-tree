@@ -154,7 +154,7 @@ export default class ReactAntResourceTree extends Component<ReactAntResourceTree
     return (
       <Space size="middle">
         <Badge size="small" count={order}>
-          {item.label}
+          {item.title}
         </Badge>
         <Space>
           <a onClick={() => this.edit(item)}>{this.t('edit')}</a>
